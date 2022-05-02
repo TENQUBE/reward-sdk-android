@@ -21,10 +21,18 @@
             android:padding="16dp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/search"
             android:text="https://www.naver.com"
             android:id="@+id/url"
-            android:layout_width="match_parent"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"/>
+        <Button
+            app:layout_constraintTop_toTopOf="parent"
+            android:text="검색"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:id="@+id/search"
+            android:onClick="@{() -> viewmodel.start(url.getText().toString())"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"/>
         <WebView
             app:layout_constraintTop_toBottomOf="@id/url"

@@ -1,19 +1,27 @@
 package com.tenqube.reward
 
 import android.content.Context
+import android.content.Intent
 import android.media.AudioManager
-import androidx.lifecycle.ViewModelProvider
+import android.net.Uri
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.webkit.*
+import android.widget.Toast
+import androidx.activity.OnBackPressedCallback
+import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModelProvider
 import com.tenqube.reward.bridge.AndroidUI
+import com.tenqube.reward.bridge.BridgeBase
 import com.tenqube.reward.databinding.MainFragmentBinding
 import java.util.*
 
+
 class MainFragment : Fragment() {
+
+    var isPageLoaded = false
 
     companion object {
         fun newInstance() = MainFragment()
@@ -28,7 +36,6 @@ class MainFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-
         viewDataBinding = MainFragmentBinding.inflate(inflater, container, false).apply {
             viewmodel = viewModel
         }
@@ -38,10 +45,19 @@ class MainFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        setupOnBackPressedDispatcher()
         viewModel = ViewModelProvider(this)[MainViewModel::class.java]
         setupLifecycleOwner()
         setupAudioManager()
+        setupEvents()
         setupWebView()
+        start()
+    }
+
+    private fun start() {
+        activity?.intent?.getStringExtra("url")?.let {
+            viewModel.start(it)
+        }
     }
 
     private fun setupLifecycleOwner() {
@@ -53,10 +69,68 @@ class MainFragment : Fragment() {
             activity?.getSystemService(Context.AUDIO_SERVICE) as AudioManager
     }
 
-    private fun setupWebView() {
+    private fun setupEvents() {
         viewModel.url.observe(this.viewLifecycleOwner) {
             viewDataBinding.webView.loadUrl(it)
         }
+
+        viewModel.finish.observe(this.viewLifecycleOwner) {
+            finish()
+        }
+
+        viewModel.click.observe(this.viewLifecycleOwner) {
+            audioManager?.playSoundEffect(AudioManager.FX_KEY_CLICK)
+        }
+
+        viewModel.onPageLoaded.observe(this.viewLifecycleOwner) {
+            onPagedLoaded()
+        }
+
+        viewModel.refreshEnabled.observe(this.viewLifecycleOwner) {
+        }
+
+        viewModel.showToast.observe(this.viewLifecycleOwner) {
+            Toast.makeText(this.context, it, Toast.LENGTH_SHORT).show()
+        }
+
+        viewModel.showConfirm.observe(this.viewLifecycleOwner) {
+            Toast.makeText(this.context, "showConfirm$it", Toast.LENGTH_SHORT).show()
+        }
+
+        viewModel.showSelectBox.observe(this.viewLifecycleOwner) {
+            Toast.makeText(this.context, "showSelectBox$it", Toast.LENGTH_SHORT).show()
+        }
+
+        viewModel.openNewView.observe(this.viewLifecycleOwner) {
+            when (it.type) {
+                "internal" -> {
+                    val intent = Intent(activity, MainActivity::class.java)
+                    intent.putExtra("url", it.url)
+                    intent.addFlags(
+                        Intent.FLAG_ACTIVITY_SINGLE_TOP or
+                                Intent.FLAG_ACTIVITY_CLEAR_TOP or
+                                Intent.FLAG_ACTIVITY_REORDER_TO_FRONT
+                    )
+                    activity?.startActivity(intent)
+                }
+                else -> {
+                    val intent = Intent(Intent.ACTION_VIEW)
+                    intent.data = Uri.parse(it.url)
+                    activity?.startActivity(intent)
+                }
+            }
+        }
+
+        viewModel.showDatePicker.observe(this.viewLifecycleOwner) {
+            Toast.makeText(this.context, "showSelectBox$it", Toast.LENGTH_SHORT).show()
+        }
+
+        viewModel.showTimePicker.observe(this.viewLifecycleOwner) {
+            Toast.makeText(this.context, "showTimePicker$it", Toast.LENGTH_SHORT).show()
+        }
+    }
+
+    private fun setupWebView() {
 
         with(viewDataBinding.webView) {
             setupWebViewSettings(this)
@@ -112,17 +186,23 @@ class MainFragment : Fragment() {
         }
     }
 
-    private fun start(url: String) {
-        viewModel.start(url)
-    }
-
-    private fun reloadWebView() {
-        viewDataBinding.webView.reload()
-        viewDataBinding.webView.visibility = View.VISIBLE
-    }
-
-    fun finish() {
+    private fun finish() {
         activity?.finish()
     }
 
+    private fun onPagedLoaded() {
+        activity?.runOnUiThread { isPageLoaded = true }
+    }
+
+    private fun setupOnBackPressedDispatcher() {
+        activity?.onBackPressedDispatcher?.addCallback(object : OnBackPressedCallback(true) {
+            override fun handleOnBackPressed() {
+                if(isPageLoaded) {
+                    viewDataBinding.webView.loadUrl("${BridgeBase.JS}${BridgeBase.RESPONSE}onFinish()")
+                } else {
+                    finish()
+                }
+            }
+        })
+    }
 }

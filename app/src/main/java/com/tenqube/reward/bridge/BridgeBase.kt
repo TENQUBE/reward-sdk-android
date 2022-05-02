@@ -13,14 +13,14 @@ import kotlinx.coroutines.*
 import kotlin.coroutines.CoroutineContext
 
 open class BridgeBase(
-    val webView: WebView
+    private val webView: WebView
 ) : CoroutineScope {
 
     var job = SupervisorJob()
     override val coroutineContext: CoroutineContext
         get() = job + Dispatchers.Default
 
-    fun getJs(callback: String, data: String): String {
+    private fun getJs(callback: String, data: String): String {
         var dataStr = data
         if (dataStr.isNotEmpty()) dataStr = "'$dataStr'"
         return "$JS$callback($dataStr);"

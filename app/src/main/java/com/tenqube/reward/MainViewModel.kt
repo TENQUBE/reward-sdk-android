@@ -6,6 +6,7 @@ import androidx.lifecycle.ViewModel
 import com.tenqube.reward.bridge.dto.request.*
 
 class MainViewModel : ViewModel() {
+
     private val _url = MutableLiveData<String>()
     val url: LiveData<String> = _url
 
