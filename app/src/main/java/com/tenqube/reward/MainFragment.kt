@@ -5,6 +5,7 @@ import android.content.Intent
 import android.media.AudioManager
 import android.net.Uri
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -16,6 +17,7 @@ import androidx.lifecycle.ViewModelProvider
 import com.tenqube.reward.bridge.AndroidUI
 import com.tenqube.reward.bridge.BridgeBase
 import com.tenqube.reward.databinding.MainFragmentBinding
+import timber.log.Timber
 import java.util.*
 
 
@@ -36,8 +38,15 @@ class MainFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
+        viewModel = ViewModelProvider(this)[MainViewModel::class.java]
         viewDataBinding = MainFragmentBinding.inflate(inflater, container, false).apply {
             viewmodel = viewModel
+        }
+
+        viewDataBinding.search.setOnClickListener {
+            Log.i("TAG","search  $it")
+
+            viewModel.start(viewDataBinding.url.text.toString())
         }
 
         return viewDataBinding.root
@@ -46,7 +55,6 @@ class MainFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setupOnBackPressedDispatcher()
-        viewModel = ViewModelProvider(this)[MainViewModel::class.java]
         setupLifecycleOwner()
         setupAudioManager()
         setupEvents()
@@ -56,6 +64,7 @@ class MainFragment : Fragment() {
 
     private fun start() {
         activity?.intent?.getStringExtra("url")?.let {
+            viewDataBinding.url.setText(it)
             viewModel.start(it)
         }
     }
@@ -72,7 +81,7 @@ class MainFragment : Fragment() {
     private fun setupEvents() {
         viewModel.url.observe(this.viewLifecycleOwner) {
             viewDataBinding.webView.loadUrl(it)
-        }
+       }
 
         viewModel.finish.observe(this.viewLifecycleOwner) {
             finish()
@@ -131,7 +140,6 @@ class MainFragment : Fragment() {
     }
 
     private fun setupWebView() {
-
         with(viewDataBinding.webView) {
             setupWebViewSettings(this)
             setupBridges(this)

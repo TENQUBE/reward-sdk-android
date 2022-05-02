@@ -1,9 +1,11 @@
 package com.tenqube.reward
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.tenqube.reward.bridge.dto.request.*
+import timber.log.Timber
 
 class MainViewModel : ViewModel() {
 
