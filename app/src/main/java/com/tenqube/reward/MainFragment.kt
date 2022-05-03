@@ -12,6 +12,7 @@ import android.view.ViewGroup
 import android.webkit.*
 import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.tenqube.reward.bridge.AndroidUI
@@ -78,6 +79,10 @@ class MainFragment : Fragment() {
             activity?.getSystemService(Context.AUDIO_SERVICE) as AudioManager
     }
 
+    var getResult = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
+        Log.i("KJ", it.toString())
+    }
+
     private fun setupEvents() {
         viewModel.url.observe(this.viewLifecycleOwner) {
             viewDataBinding.webView.loadUrl(it)
@@ -111,16 +116,11 @@ class MainFragment : Fragment() {
         }
 
         viewModel.openNewView.observe(this.viewLifecycleOwner) {
-            when (it.type) {
+           when (it.type) {
                 "internal" -> {
-                    val intent = Intent(activity, MainActivity::class.java)
+                    val intent = Intent(this.context, MainActivity::class.java)
                     intent.putExtra("url", it.url)
-                    intent.addFlags(
-                        Intent.FLAG_ACTIVITY_SINGLE_TOP or
-                                Intent.FLAG_ACTIVITY_CLEAR_TOP or
-                                Intent.FLAG_ACTIVITY_REORDER_TO_FRONT
-                    )
-                    activity?.startActivity(intent)
+                    getResult.launch(intent)
                 }
                 else -> {
                     val intent = Intent(Intent.ACTION_VIEW)
