@@ -1,135 +1,136 @@
-package com.tenqube.reward.bridge
+package com.tenqube.reward.bridge.ui
 
 import android.webkit.JavascriptInterface
 import android.webkit.WebView
-import com.tenqube.reward.MainViewModel
+import com.tenqube.reward.bridge.BridgeBase
+import com.tenqube.reward.bridge.RewardBridge
 import com.tenqube.reward.bridge.dto.request.*
+import com.tenqube.reward.domain.ui.UIService
 
-class AndroidUI(
+class AndroidUIBridge(
     webView: WebView,
-    private val viewModel: MainViewModel
+    private val uiService: UIService
 ) : BridgeBase(webView), RewardBridge.UI {
 
     override val bridgeName: String
         get() = "visualUI"
 
-
     @JavascriptInterface
     override fun finish() {
         execute(
-            funcName = this@AndroidUI::finish.name,
+            funcName = this@AndroidUIBridge::finish.name,
             params = null,
             classOfT = Any::class.java,
             body = {
-            viewModel.finish()
+                uiService.finish()
         })
     }
 
 
     @JavascriptInterface
     override fun onClick() {
-        execute(funcName = this@AndroidUI::onClick.name,
+        execute(funcName = this@AndroidUIBridge::onClick.name,
             params = null,
             classOfT = Any::class.java,
             body = {
                 it?.let {
-                    viewModel.onClickSound()
+                    uiService.onClickSound()
                 }
             })
     }
 
     @JavascriptInterface
     override fun onPageLoaded() {
-        execute(funcName = this@AndroidUI::onPageLoaded.name,
+        execute(funcName = this@AndroidUIBridge::onPageLoaded.name,
             params = null,
             classOfT = Any::class.java,
             body = {
                 it?.let {
-                    viewModel.onPageLoaded() // 백키 권한을 웹뷰로 전달
+                    uiService.onPageLoaded() // 백키 권한을 웹뷰로 전달
                 }
             })
     }
 
     @JavascriptInterface
     override fun setRefreshEnabled(params: String?) {
-        execute(funcName = this@AndroidUI::setRefreshEnabled.name,
+        execute(funcName = this@AndroidUIBridge::setRefreshEnabled.name,
             params = params,
             classOfT = RefreshRequest::class.java,
             body = {
                 it?.let {
-                    viewModel.setRefreshEnabled(it.data.enabled)
+                    uiService.setRefreshEnabled(it.data.enabled)
                 }
             })
     }
 
     @JavascriptInterface
     override fun showToast(params: String?) {
-        execute(funcName = this@AndroidUI::showToast.name,
+        execute(funcName = this@AndroidUIBridge::showToast.name,
             params = params,
             classOfT = ShowToastRequest::class.java,
             body = {
                 it?.let {
-                    viewModel.showToast(it.data.message)
+                    uiService.showToast(it.data.message)
                 }
             })
     }
 
     @JavascriptInterface
     override fun showConfirm(params: String?) {
-        execute(funcName = this@AndroidUI::showConfirm.name,
+        execute(funcName = this@AndroidUIBridge::showConfirm.name,
             params = params,
             classOfT = ShowConfirmRequest::class.java,
             body = {
                 it?.let {
-                    viewModel.showConfirm(it.data)
+                    uiService.showConfirm(it.data)
                 }
             })
     }
 
     @JavascriptInterface
     override fun showSelectBox(params: String?) {
-        execute(funcName = this@AndroidUI::showSelectBox.name,
+        execute(funcName = this@AndroidUIBridge::showSelectBox.name,
             params = params,
             classOfT = ShowSelectBoxRequest::class.java,
             body = {
                 it?.let {
-                    viewModel.showSelectBox(it.data)
+                    uiService.showSelectBox(it.data)
                 }
             })
     }
 
     @JavascriptInterface
     override fun openNewView(params: String?) {
-        execute(funcName = this@AndroidUI::openNewView.name,
+        execute(funcName = this@AndroidUIBridge::openNewView.name,
             params = params,
             classOfT = OpenNewViewRequest::class.java,
             body = {
                 it?.let {
-                    viewModel.openNewView(it.data)
+                    uiService.openNewView(it.data)
                 }
             })
     }
 
     @JavascriptInterface
     override fun showDatePicker(params: String?) {
-        execute(funcName = this@AndroidUI::showDatePicker.name,
+        execute(funcName = this@AndroidUIBridge::showDatePicker.name,
             params = params,
             classOfT = ShowDatePickerRequest::class.java,
             body = {
                 it?.let {
-                    viewModel.showDatePicker(it.data)
+                    uiService.showDatePicker(it.data)
                 }
             })
     }
 
     @JavascriptInterface
     override fun showTimePicker(params: String?) {
-        execute(funcName = this@AndroidUI::showTimePicker.name,
+        execute(funcName = this@AndroidUIBridge::showTimePicker.name,
             params = params,
             classOfT = ShowTimePickerRequest::class.java,
             body = {
                 it?.let {
-                    viewModel.showTimePicker(it.data)
+                    uiService.showTimePicker(it.data)
                 }
             })
     }
