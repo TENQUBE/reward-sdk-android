@@ -32,4 +32,8 @@ class WebViewManager(private val activity: Activity) {
     fun onBackPressed() {
         uiService.onBackPressed()
     }
+
+    fun setIsPageLoaded(isPageLoaded: Boolean) {
+        uiService.setIsPageLoaded(isPageLoaded)
+    }
 }

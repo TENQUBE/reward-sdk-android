@@ -87,6 +87,7 @@ class MainFragment : Fragment() {
 
             override fun onPageFinished(view: WebView?, url: String?) {
                 super.onPageFinished(view, url)
+                webViewManager.uiService.isPageLoaded = true
             }
         }
     }

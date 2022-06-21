@@ -19,6 +19,10 @@ class WidgetUIService(
     var isPageLoaded = false
     private var audioManager: AudioManager? = null
 
+    fun setIsPageLoaded(isPageLoaded: Boolean) {
+        this.isPageLoaded = isPageLoaded
+    }
+
     init {
         audioManager =
             activity.getSystemService(Context.AUDIO_SERVICE) as AudioManager
