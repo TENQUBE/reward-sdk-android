@@ -40,6 +40,8 @@ android {
 }
 
 dependencies {
+    implementation project(":webui")
+
     implementation "com.google.code.gson:gson:2.8.9"
     implementation "com.jakewharton.timber:timber:4.7.1"
 
