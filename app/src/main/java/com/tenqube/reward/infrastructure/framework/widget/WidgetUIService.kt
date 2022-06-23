@@ -9,7 +9,11 @@ import android.webkit.WebView
 import com.tenqube.reward.MainActivity
 import com.tenqube.reward.bridge.BridgeBase
 import com.tenqube.reward.domain.ui.UIService
-import com.tenqube.reward.domain.ui.dto.*
+import com.tenqube.webui.dto.OpenNewViewDto
+import com.tenqube.webui.dto.ShowConfirmDto
+import com.tenqube.webui.dto.ShowDatePickerDto
+import com.tenqube.webui.dto.ShowSelectBoxDto
+import com.tenqube.webui.dto.ShowTimePickerDto
 
 class WidgetUIService(
     private val activity: Activity,

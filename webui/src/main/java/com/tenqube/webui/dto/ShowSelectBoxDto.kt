@@ -1,6 +1,4 @@
-package com.tenqube.reward.domain.ui.dto
-
-import com.tenqube.webui.dto.SelectBoxItemDto
+package com.tenqube.webui.dto
 
 data class ShowSelectBoxDto(
     val title: String,

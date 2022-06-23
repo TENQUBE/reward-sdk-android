@@ -1,7 +1,4 @@
-package com.tenqube.reward.domain.ui.dto
-
-import com.tenqube.webui.dto.ButtonDetailDto
-import com.tenqube.webui.dto.ButtonDto
+package com.tenqube.webui.dto
 
 data class ShowConfirmDto(
     val title: String,

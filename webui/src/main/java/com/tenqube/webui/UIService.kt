@@ -1,10 +1,6 @@
-package com.tenqube.reward.domain.ui
+package com.tenqube.webui
 
-import com.tenqube.webui.dto.OpenNewViewDto
-import com.tenqube.webui.dto.ShowConfirmDto
-import com.tenqube.webui.dto.ShowDatePickerDto
-import com.tenqube.webui.dto.ShowSelectBoxDto
-import com.tenqube.webui.dto.ShowTimePickerDto
+import com.tenqube.webui.dto.*
 
 interface UIService {
     fun finish()
