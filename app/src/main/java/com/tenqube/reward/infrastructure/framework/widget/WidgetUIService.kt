@@ -16,7 +16,7 @@ class WidgetUIService(
     private val webView: WebView
 ) : UIService {
 
-    var isPageLoaded = false
+    private var isPageLoaded = false
     private var audioManager: AudioManager? = null
 
     fun setIsPageLoaded(isPageLoaded: Boolean) {

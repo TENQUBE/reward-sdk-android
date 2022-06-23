@@ -26,7 +26,6 @@ class AndroidUIBridge(
         })
     }
 
-
     @JavascriptInterface
     override fun onClick() {
         execute(funcName = this@AndroidUIBridge::onClick.name,
@@ -113,14 +112,16 @@ class AndroidUIBridge(
 
     @JavascriptInterface
     override fun showDatePicker(params: String?) {
-        execute(funcName = this@AndroidUIBridge::showDatePicker.name,
+        execute(
+            funcName = this@AndroidUIBridge::showDatePicker.name,
             params = params,
             classOfT = ShowDatePickerRequest::class.java,
             body = {
                 it?.let {
                     uiService.showDatePicker(it.data)
                 }
-            })
+            }
+        )
     }
 
     @JavascriptInterface
