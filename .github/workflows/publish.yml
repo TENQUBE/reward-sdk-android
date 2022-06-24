@@ -32,7 +32,7 @@ jobs:
       - name: Publish Library
         run: |
           echo "Publishing library🚀"
-          ./gradlew publish --no-daemon --no-parallel
+          ./gradlew webui:uploadArchives --no-daemon --no-parallel
           echo "Published✅"
           echo "Releasing repository...🚀"
           ./gradlew closeAndReleaseRepository
